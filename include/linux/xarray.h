@@ -15,7 +15,9 @@
 #include <linux/kconfig.h>
 #include <linux/kernel.h>
 #include <linux/rcupdate.h>
+#ifndef __GENKSYMS__
 #include <linux/sched/mm.h>
+#endif
 #include <linux/spinlock.h>
 #include <linux/types.h>
 
