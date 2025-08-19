@@ -9,7 +9,9 @@
 #define I3C_INTERNALS_H
 
 #include <linux/i3c/master.h>
+#ifndef __GENKSYMS__
 #include <linux/io.h>
+#endif
 
 extern struct bus_type i3c_bus_type;
 
