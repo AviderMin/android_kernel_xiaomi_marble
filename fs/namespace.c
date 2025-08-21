@@ -3618,6 +3618,12 @@ struct mnt_namespace *copy_mnt_ns(unsigned long flags, struct mnt_namespace *ns,
 	 */
 	p = old;
 	q = new;
+#ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
+	if (likely(is_zygote_pid)) {
+		last_entry_mnt_id = new->mnt_id;
+		q->mnt.susfs_mnt_id_backup = new->mnt_id;
+	}
+#endif
 	while (p) {
 		q->mnt_ns = new_ns;
 		new_ns->mounts++;
@@ -3644,6 +3650,9 @@ struct mnt_namespace *copy_mnt_ns(unsigned long flags, struct mnt_namespace *ns,
 			q->mnt_id = ++last_entry_mnt_id;
 		}
 #endif
+ 		while (p->mnt.mnt_root != q->mnt.mnt_root)
+ 			p = next_mnt(p, old);
+
 	}
 	namespace_unlock();
 

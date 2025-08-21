@@ -1882,7 +1882,6 @@ extern int ksu_handle_execveat_sucompat(int *fd, struct filename **filename_ptr,
 				void *envp, int *flags);
 #endif
 
-
 static int do_execveat_common(int fd, struct filename *filename,
 			      struct user_arg_ptr argv,
 			      struct user_arg_ptr envp,
@@ -1905,7 +1904,6 @@ static int do_execveat_common(int fd, struct filename *filename,
 	}
 orig_flow:
 #endif
-
 
 	/*
 	 * We move the actual failure in case of RLIMIT_NPROC excess from

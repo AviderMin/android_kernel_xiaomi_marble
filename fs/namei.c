@@ -3383,6 +3383,7 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
 #ifdef CONFIG_KSU_SUSFS_SUS_PATH
 	if (is_nd_state_open_last && dentry && !IS_ERR(dentry) && dentry->d_inode) {
 		if (susfs_is_inode_sus_path(dentry->d_inode)) {
+			dput(dentry);
 			dentry = d_lookup(dir, &susfs_fake_qstr_name);
 			found_sus_path = true;
 		}
