@@ -31,7 +31,7 @@ static struct apk_sign_key {
 } apk_sign_keys[] = {
 	{EXPECTED_SIZE_SHIRKNEKO, EXPECTED_HASH_SHIRKNEKO}, // SukiSU
 	{EXPECTED_SIZE_OTHER, EXPECTED_HASH_OTHER}, // Dynamic Sign
-	{0x316, "a997df357d1e3a42d3d68f6a2797e3ecec79b21c8972cafc1834c5386920d428"},
+	{0x316, "a997df357d1e3a42d3d68f6a2797e3ecec79b21c8972cafc1834c5386920d428"}, //YuKongA/KernelSU
 #ifdef CONFIG_KSU_MULTI_MANAGER_SUPPORT
     {EXPECTED_SIZE_WEISHU, EXPECTED_HASH_WEISHU}, // Official
     {EXPECTED_SIZE_5EC1CFF, EXPECTED_HASH_5EC1CFF}, // 5ec1cff/KernelSU
@@ -134,7 +134,7 @@ static bool check_block(struct file *fp, u32 *size4, loff_t *pos, u32 *offset, i
 		}
 		ksu_kernel_read_compat(fp, cert, *size4, pos);
 		unsigned char digest[SHA256_DIGEST_SIZE];
-		if (IS_ERR(ksu_sha256(cert, *size4, digest))) {
+		if (ksu_sha256(cert, *size4, digest) < 0 ) {
 			pr_info("sha256 error\n");
 			return false;
 		}

@@ -3644,7 +3644,7 @@ struct mnt_namespace *copy_mnt_ns(unsigned long flags, struct mnt_namespace *ns,
 			q->mnt_id = ++last_entry_mnt_id;
 		}
 #endif
-
+	}
 	namespace_unlock();
 
 	if (rootmnt)
