@@ -39,7 +39,7 @@ static LIST_HEAD(LH_SUS_PATH_ANDROID_DATA);
 static LIST_HEAD(LH_SUS_PATH_SDCARD);
 static struct st_android_data_path android_data_path = {0};
 static struct st_sdcard_path sdcard_path = {0};
-const struct qstr susfs_fake_qstr_name = QSTR_INIT("..!5!u!S!", 9); // used to re-test the dcache lookup, make sure you don't have file named like this!!
+const struct qstr susfs_fake_qstr_name = QSTR_INIT("..5.u.S", 9); // used to re-test the dcache lookup, make sure you don't have file named like this!!
 
 int susfs_set_i_state_on_external_dir(char __user* user_info, int cmd) {
 	struct path path;

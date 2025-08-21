@@ -17,7 +17,7 @@
 #include <linux/syscalls.h>
 #include <linux/pagemap.h>
 #include <linux/compat.h>
-#if defined(CONFIG_KSU_SUSFS_SUS_KSTAT) || defined(CONFIG_KSU_SUSFS_SUS_MOUNT)
+#if defined(CONFIG_KSU_SUSFS_SUS_KSTAT) || defined(CONFIG_KSU_SUSFS_SUS_MOUNT) || defined(CONFIG_KSU_SUSFS_SUS_SU)
 #include <linux/susfs_def.h>
 #endif
 
@@ -190,6 +190,11 @@ int vfs_fstat(int fd, struct kstat *stat)
  * 0 will be returned on success, and a -ve error code if unsuccessful.
  */
 
+#ifdef CONFIG_KSU_SUSFS_SUS_SU
+extern bool susfs_is_sus_su_hooks_enabled __read_mostly;
+extern bool __ksu_is_allow_uid(uid_t uid);
+extern int ksu_handle_stat(int *dfd, const char __user **filename_user, int *flags);
+#endif
 static int vfs_statx(int dfd, const char __user *filename, int flags,
 	      struct kstat *stat, u32 request_mask)
 {
@@ -198,6 +203,18 @@ static int vfs_statx(int dfd, const char __user *filename, int flags,
 	int error;
 #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
 	struct mount *mnt;
+#endif
+
+#ifdef CONFIG_KSU_SUSFS_SUS_SU
+	if (likely(susfs_is_current_proc_su_not_allowed())) {
+		goto orig_flow;
+	}
+	if (likely(susfs_is_sus_su_hooks_enabled) &&
+		unlikely(__ksu_is_allow_uid(current_uid().val)))
+	{
+		ksu_handle_stat(&dfd, &filename, &flags);
+	}
+orig_flow:
 #endif
 
 	if (flags & ~(AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT | AT_EMPTY_PATH |
