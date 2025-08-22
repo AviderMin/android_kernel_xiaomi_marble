@@ -123,6 +123,176 @@ httools_static: MIT License
     Source not required, however, respective source is provided:
     https://github.com/capntrips/HashtreePatcher
 
+extract.erofs, mkfs.erofs:
+
+    erofs-utils uses two different license patterns:
+
+     - most liberofs files in `lib` and `include` directories
+       use GPL-2.0+ OR Apache-2.0 dual license;
+
+     - all other files use GPL-2.0+ license, unless
+       explicitly stated otherwise.
+
+    Relevant licenses can be found in the LICENSES directory.
+
+    This model is selected to emphasize that
+    files in `lib` and `include` directory are designed to be included into
+    3rd-party applications, while all other files, are intended to be used
+    "as is", as part of their intended scenarios, with no intention to
+    support 3rd-party integration use cases.
+
+    Official compiled binaries from unmodified source:
+    https://github.com/sekaiacg/erofs-utils
+
+7za: LGPLv2
+    7-Zip is free software with open source.
+    The most of the code is under the GNU LGPL license.
+    Some parts of the code are under the BSD 3-clause License.
+    Also there is unRAR license restriction for some parts of the code.
+    Read [7-Zip License](https://www.7-zip.org/license.txt) information.
+
+    You can use 7-Zip on any computer, including a computer in a commercial organization.
+    You don't need to register or pay for 7-Zip.
+
+    Self-compiled binary from unmodified source:
+    https://sourceforge.net/projects/sevenzip/files/7-Zip/25.01/7z2501-src.tar.xz/download
+
+vbmeta-disable-verification: MIT License
+
+    Copyright (c) 2022 LibXZR
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+    Source not required, however, respective source is provided:
+    https://github.com/libxzr/vbmeta-disable-verification
+
+bspatch: BSD
+    Copyright 2003-2005 Colin Percival
+    All rights reserved
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted providing that the following conditions 
+    are met:
+    1. Redistributions of source code must retain the above copyright
+       notice, this list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright
+       notice, this list of conditions and the following disclaimer in the
+       documentation and/or other materials provided with the distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+    ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+    DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+    OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+    STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+    IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+
+    Self-compiled binary from unmodified source:
+    http://www.daemonology.net/bsdiff/
+
+keycheck: Apache License 2.0 & BSD
+    Copyright (C) 2010 The Android Open Source Project
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+    Source not required, however, respective source is provided:
+    https://github.com/Zackptg5/Keycheck
+
+lpdump: Apache License 2.0
+    Copyright (C) 2018 The Android Open Source Project
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+    Source not required, however, respective source is provided:
+    https://android.googlesource.com/platform/system/extras/+/refs/heads/main/partition_tools/
+
+dtp: None
+    Source:
+    https://github.com/lyq1996/msm8998_offset_voltage/tree/TWRP/dtp_src
+
+fdtget, fdtput: GPL/BSD dual-licensed
+    Licensing and contribution policy of dtc and libfdt
+
+    This dtc package contains two pieces of software: dtc itself, and
+    libfdt which comprises the files in the libfdt/ subdirectory.  These
+    two pieces of software, although closely related, are quite distinct.
+    dtc does not incorporate or rely on libfdt for its operation, nor vice
+    versa.  It is important that these two pieces of software have
+    different license conditions.
+
+    As SPDX license tags in each source file attest, dtc is licensed
+    under the GNU GPL.  The full text of the GPL can be found in the file
+    entitled 'GPL' which should be included in this package.  dtc code,
+    therefore, may not be incorporated into works which do not have a GPL
+    compatible license.
+
+    libfdt, however, is GPL/BSD dual-licensed.  That is, it may be used
+    either under the terms of the GPL, or under the terms of the 2-clause
+    BSD license (aka the ISC license).  The full terms of that license can
+    be found are in the file entitled 'BSD-2-Clause'. This is, in
+    practice, equivalent to being BSD licensed, since the terms of the BSD
+    license are strictly more permissive than the GPL.
+
+    Self-compiled binaries from unmodified source:
+    https://github.com/dgibson/dtc
+
+e2fsck, resize2fs: GPLv2
+    This package, the EXT2 filesystem utilities, are made available under
+    the GNU Public License version 2, with the exception of the lib/ext2fs
+    and lib/e2p libraries, which are made available under the GNU Library
+    General Public License Version 2, the lib/uuid library which is made
+    available under a BSD-style license and the lib/et and lib/ss
+    libraries which are made available under an MIT-style license.  Please
+    see lib/uuid/COPYING for more details for the license for the files
+    comprising the libuuid library, and the source file headers of the
+    libet and libss libraries for more information.
+
+    Self-compiled binaries from unmodified source:
+    https://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
+
+vendor_boot_fix: None
+    Source:
+    https://github.com/Pzqqt/AnyKernel3/tree/Marble-Melt/vendor_boot_fix-ndk
 
 ## Optional Binary Licenses:
 
