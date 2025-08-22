@@ -165,5 +165,4 @@ arch/arm/boot/dts/vendor
 sphinx_*/
 
 # Custom
-/build.sh
 Documentation/devicetree/bindings
