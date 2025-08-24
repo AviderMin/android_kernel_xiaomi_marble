@@ -143,7 +143,9 @@ bool ovl_dentry_weird(struct dentry *dentry)
 		return true;
 
 	return dentry->d_flags & (DCACHE_NEED_AUTOMOUNT |
-				  DCACHE_MANAGE_TRANSIT);
+				  DCACHE_MANAGE_TRANSIT |
+				  DCACHE_OP_HASH |
+				  DCACHE_OP_COMPARE);
 }
 
 enum ovl_path_type ovl_path_type(struct dentry *dentry)
