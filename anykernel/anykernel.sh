@@ -516,7 +516,7 @@ if ${include_perfmgr}; then
         echo "perfmgr.ko" >> "${home}/_vendor_boot_modules/modules.load"
     fi
 
-    ui_print "- perfmgr.ko installed to vendor_boot)."
+    ui_print "- perfmgr.ko installed to vendor_boot."
 fi
 # ===== End perfmgr.ko =====
 
