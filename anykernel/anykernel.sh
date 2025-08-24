@@ -326,7 +326,8 @@ if keycode_select \
     " " \
     "提示:" \
     "总是启用 360HZ 触控采样率并不能提升你的日常" \
-    "使用体验, 并且可能增加耗电."; then
+    "使用体验, 并且可能增加耗电." \
+	" "; then
 	echo "options goodix_core force_high_report_rate=y" >> $vendor_dlkm_modules_options_file
 fi
 
@@ -351,7 +352,8 @@ elif keycode_select \
     " " \
     "提示:" \
     "如果你发现系统设置中电池使用情况数据" \
-    "无法正常显示, 请选择是."; then
+    "无法正常显示, 请选择是." \
+	" "; then
 	do_fix_battery_usage=true
 fi
 if ${do_fix_battery_usage}; then
@@ -395,7 +397,8 @@ elif keycode_select \
     "是否使用开源的显示驱动?" \
     " " \
     "提示:" \
-    "如果你不知道这意味着什么, 请选择否."; then
+    "如果你不知道这意味着什么, 请选择否." \
+	" "; then
 	use_oss_msm_drm=true
 fi
 if ${use_oss_msm_drm}; then
@@ -418,7 +421,8 @@ elif keycode_select \
     "是否使用开源的相机驱动?" \
     " " \
     "提示:" \
-    "如果你不知道这意味着什么, 请选择否."; then
+    "如果你不知道这意味着什么, 请选择否." \
+	" "; then
 	use_oss_camera_driver=true
 fi
 if ${use_oss_camera_driver}; then
@@ -442,7 +446,8 @@ elif keycode_select \
     "提示:" \
     "如果你正在使用 AOSP rom 并且发现红外遥控" \
     "不好使, 请选择是." \
-    "如果你在使用 MIUI/HyperOS rom, 请选择否."; then
+    "如果你在使用 MIUI/HyperOS rom, 请选择否." \
+	" "; then
 	use_oss_ir_driver=true
 fi
 if ${use_oss_ir_driver}; then
@@ -459,7 +464,8 @@ if ${is_miui_rom}; then
 	    "使用开源的 ZRAM 内核模块意味着你将放弃小米" \
 	    "针对 MIUI/HyperOS 的 ZRAM 的特殊优化." \
 	    " " \
-	    "如果你不知道这意味着什么, 请选择否."; then
+	    "如果你不知道这意味着什么, 请选择否." \
+		" "; then
 		cp -f ${home}/_alt/MI-zram.ko ${home}/_vendor_dlkm_modules/zram.ko
 		cp -f ${home}/_alt/MI-zsmalloc.ko ${home}/_vendor_dlkm_modules/zsmalloc.ko
 	fi
@@ -467,8 +473,57 @@ fi
 
 unset vendor_dlkm_modules_options_file
 
+# ===== Optional: perfmgr.ko =====
+
+include_perfmgr=false
+
+if [ -f "${home}/_extra_modules/perfmgr.ko" ]; then
+    if keycode_select \
+        "是否安装 perfmgr.ko 内核模块?" \
+        " " \
+        "提示:" \
+        "该模块依赖于云控或者第三方调度." \
+        "可能不能带来提升,甚至会使温度升高." \
+        "用于调度/频控增强；若与 ROM 自带策略冲突请选否." \
+        " "; then
+        include_perfmgr=true
+    fi
+else
+    ui_print " "
+    ui_print "- _extra_modules/perfmgr.ko not found, skipping optional installation."
+fi
+
+if ${include_perfmgr}; then
+    # 确保目标目录存在 / Ensure target directory exists
+    mkdir -p "${home}/_vendor_boot_modules"
+
+    # 复制 perfmgr.ko 到 vendor_boot_modules / Copy perfmgr.ko to vendor_boot_modules
+    cp -f "${home}/_extra_modules/perfmgr.ko" "${home}/_vendor_boot_modules/" \
+        || abort "! 无法复制 perfmgr.ko"
+
+    # 追加 modules.dep 依赖 / Append dependencies to modules.dep
+    dep_line="/lib/modules/perfmgr.ko: /lib/modules/qcom-dcvs.ko /lib/modules/dcvs_fp.ko /lib/modules/qcom_rpmh.ko /lib/modules/cmd-db.ko /lib/modules/qcom_ipc_logging.ko /lib/modules/minidump.ko /lib/modules/smem.ko /lib/modules/sched-walt.ko /lib/modules/qcom-cpufreq-hw.ko /lib/modules/metis.ko /lib/modules/mi_schedule.ko"
+    [ -f "${home}/_vendor_boot_modules/modules.dep" ] || touch "${home}/_vendor_boot_modules/modules.dep"
+    if ! grep -q "^/lib/modules/perfmgr\.ko:" "${home}/_vendor_boot_modules/modules.dep"; then
+        [ -s "${home}/_vendor_boot_modules/modules.dep" ] && echo "" >> "${home}/_vendor_boot_modules/modules.dep"
+        echo "$dep_line" >> "${home}/_vendor_boot_modules/modules.dep"
+    fi
+
+    # 追加到 modules.load / Append to modules.load
+    [ -f "${home}/_vendor_boot_modules/modules.load" ] || touch "${home}/_vendor_boot_modules/modules.load"
+    if ! grep -q "^perfmgr\.ko$" "${home}/_vendor_boot_modules/modules.load"; then
+        [ -s "${home}/_vendor_boot_modules/modules.load" ] && echo "" >> "${home}/_vendor_boot_modules/modules.load"
+        echo "perfmgr.ko" >> "${home}/_vendor_boot_modules/modules.load"
+    fi
+
+    ui_print "- perfmgr.ko installed to vendor_boot)."
+fi
+# ===== End perfmgr.ko =====
+
+
 # Disguised the GPU model as Adreno730v3
 disguised_adreno730=false
+
 if keycode_select \
     "是否伪装 GPU 型号为 Adreno730?" \
     " " \
@@ -476,7 +531,8 @@ if keycode_select \
     "骁龙 8+ Gen1 的 GPU 型号即为 Adreno730." \
     "将 GPU 型号伪装成 Adreno730 或许可以在" \
     "某些手游中解锁更高的画质或帧率," \
-    "但副作用未知."; then
+    "但副作用未知." \
+	" "; then
 	disguised_adreno730=true
 fi
 
@@ -499,7 +555,8 @@ if ! keycode_select \
     "这是最后一个选项." \
     " " \
     "选择是以正式开始安装." \
-    "选择否以取消安装."; then
+    "选择否以取消安装." \
+	" "; then
 	abort "用户中止."
 fi
 
