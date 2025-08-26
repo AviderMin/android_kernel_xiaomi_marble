@@ -32,7 +32,7 @@ color_echo "$green" "工作目录: $SCRIPT_DIR"
 TARGET_DEVICE=""
 KERNEL_NAME="GlowX"
 KERNEL_VERSION="v4.0.7"
-FIX_VERSION="0"
+FIX_VERSION="2"
 USE_KSU=true       # 默认启用 KSU
 CCACHE_ENABLED=true
 NO_CLEAN=false
