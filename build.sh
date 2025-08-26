@@ -32,7 +32,7 @@ color_echo "$green" "工作目录: $SCRIPT_DIR"
 TARGET_DEVICE=""
 KERNEL_NAME="GlowX"
 KERNEL_VERSION="v4.0.7"
-FIX_VERSION="2"
+FIX_VERSION="6"
 USE_KSU=true       # 默认启用 KSU
 CCACHE_ENABLED=true
 NO_CLEAN=false
@@ -122,21 +122,9 @@ MAKE_ARGS+=" KBUILD_BUILD_HOST=AviderMin"
 MAKE_ARGS+=" KBUILD_BUILD_USER=GlowX"
 
 # LLVM toolchain
+MAKE_ARGS+=" CC=clang"
 MAKE_ARGS+=" LLVM=1"
 MAKE_ARGS+=" LLVM_IAS=1"
-MAKE_ARGS+=" CC=clang"
-MAKE_ARGS+=" LD=ld.lld"
-MAKE_ARGS+=" AR=llvm-ar"
-MAKE_ARGS+=" NM=llvm-nm"
-MAKE_ARGS+=" STRIP=llvm-strip"
-MAKE_ARGS+=" OBJCOPY=llvm-objcopy"
-MAKE_ARGS+=" OBJDUMP=llvm-objdump"
-MAKE_ARGS+=" READELF=llvm-readelf"
-MAKE_ARGS+=" OBJSIZE=llvm-size"
-
-# 交叉编译工具链 (需要提前安装 gcc-arm64 + gcc-armhf)
-MAKE_ARGS+=" CROSS_COMPILE=aarch64-linux-gnu-"
-MAKE_ARGS+=" CROSS_COMPILE_ARM32=arm-linux-gnueabihf-"
 
 # Clang triple (兼容某些内核脚本)
 MAKE_ARGS+=" CLANG_TRIPLE=aarch64-linux-gnu-"
