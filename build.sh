@@ -32,7 +32,7 @@ color_echo "$green" "工作目录: $SCRIPT_DIR"
 TARGET_DEVICE=""
 KERNEL_NAME="GlowX"
 KERNEL_VERSION="v4.0.7"
-FIX_VERSION="6"
+FIX_VERSION="X"
 USE_KSU=true       # 默认启用 KSU
 CCACHE_ENABLED=true
 NO_CLEAN=false
@@ -83,36 +83,13 @@ done
 BUILD_DIR="../Releases_${TARGET_DEVICE}_${KERNEL_NAME}"
 color_echo "$green" "使用独立构建目录: $BUILD_DIR"
 
-# 工具链路径变量，默认系统环境clang
-CLANG_PATH=${CLANG_PATH:-clang}
+CLANG_PATH=${CLANG_PATH:-$HOME/build_toolchain/clang-21/bin}
 
-# 检查必需的工具链
-check_toolchain() {
-    local tool=$1
-    local install_cmd=$2
-    if ! command -v "$tool" >/dev/null 2>&1; then
-        color_echo "$red" "错误: [$tool] 未找到，请检查你的环境或设置 CLANG_PATH"
-        color_echo "$yellow" "尝试安装: $install_cmd"
-        exit 1
-    fi
-}
+# 设置完整的工具路径
+export CLANG_BIN="$CLANG_PATH/clang"
+export CLANGXX_BIN="$CLANG_PATH/clang++"
 
-check_toolchain "aarch64-linux-gnu-ld" "sudo apt install binutils-aarch64-linux-gnu"
-check_toolchain "arm-linux-gnueabi-ld" "sudo apt install binutils-arm-linux-gnueabi"
-check_toolchain "$CLANG_PATH" "sudo apt install clang"
-
-# 设置ccache
-if $CCACHE_ENABLED; then
-    export CCACHE_DIR="${HOME}/.cache/ccache_mikernel_${TARGET_DEVICE}"
-    export CC="gcc clang"
-    export CXX="g++ clang"
-    export PATH="/usr/lib/ccache:$PATH"
-    color_echo "$green" "已启用 ccache | 缓存目录: $CCACHE_DIR"
-else
-    color_echo "$yellow" "警告: 已禁用 ccache，编译速度可能降低"
-fi
-
-# 设置编译参数
+# 修改编译参数设置
 MAKE_ARGS="O=$BUILD_DIR"
 MAKE_ARGS+=" ARCH=arm64"
 MAKE_ARGS+=" SUBARCH=arm64"
@@ -121,13 +98,16 @@ MAKE_ARGS+=" SUBARCH=arm64"
 MAKE_ARGS+=" KBUILD_BUILD_HOST=AviderMin"
 MAKE_ARGS+=" KBUILD_BUILD_USER=GlowX"
 
-# LLVM toolchain
-MAKE_ARGS+=" CC=clang"
+# LLVM toolchain - 使用完整路径
+MAKE_ARGS+=" CC=$CLANG_BIN"
 MAKE_ARGS+=" LLVM=1"
 MAKE_ARGS+=" LLVM_IAS=1"
 
 # Clang triple (兼容某些内核脚本)
 MAKE_ARGS+=" CLANG_TRIPLE=aarch64-linux-gnu-"
+
+# 设置 PATH 环境变量
+export PATH="$CLANG_PATH:$PATH"
 
 # 检查设备配置是否存在
 if [[ ! -f "$SCRIPT_DIR/arch/arm64/configs/${TARGET_DEVICE}_defconfig" ]]; then
@@ -144,7 +124,7 @@ color_echo "$yellow" "内核版本: $KERNEL_VERSION"
 color_echo "$yellow" "修复版本: $FIX_VERSION"
 
 color_echo "$green" "[clang 版本信息]:"
-${CLANG_PATH} --version
+"$CLANG_BIN" --version
 
 # 清理工作区
 if ! $NO_CLEAN; then
@@ -216,10 +196,10 @@ fi
 # 处理LTO配置
 if $USE_THINLTO; then
     color_echo "$green" "启用 ThinLTO..."
-    ./scripts/config --file "$BUILD_DIR/.config" -e LTO_CLANG -e THINLTO -d LTO_NONE
+    ./scripts/config --file "$BUILD_DIR/.config" -e LTO_CLANG -e THINLTO
 else
     color_echo "$yellow" "禁用 ThinLTO..."
-    ./scripts/config --file "$BUILD_DIR/.config" -e LTO_CLANG -d THINLTO -d LTO_NONE
+    ./scripts/config --file "$BUILD_DIR/.config" -e LTO_CLANG -d THINLTO
 fi
 
 make $MAKE_ARGS olddefconfig
