@@ -109,6 +109,16 @@ MAKE_ARGS+=" CLANG_TRIPLE=aarch64-linux-gnu-"
 # 设置 PATH 环境变量
 export PATH="$CLANG_PATH:$PATH"
 
+# 设置ccache
+if $CCACHE_ENABLED; then
+    export CCACHE_DIR="${HOME}/.cache/ccache_mikernel_${TARGET_DEVICE}"
+    export PATH="/usr/lib/ccache:$PATH"
+    color_echo "$green" "已启用 ccache | 缓存目录: $CCACHE_DIR"
+else
+    color_echo "$yellow" "警告: 已禁用 ccache，编译速度可能降低"
+fi
+
+
 # 检查设备配置是否存在
 if [[ ! -f "$SCRIPT_DIR/arch/arm64/configs/${TARGET_DEVICE}_defconfig" ]]; then
     color_echo "$red" "错误: 未找到目标设备 [$TARGET_DEVICE] 的配置"
@@ -118,10 +128,18 @@ if [[ ! -f "$SCRIPT_DIR/arch/arm64/configs/${TARGET_DEVICE}_defconfig" ]]; then
 fi
 
 # 显示环境信息
-color_echo "$yellow" "目标设备: $TARGET_DEVICE"
-color_echo "$yellow" "内核名称: $KERNEL_NAME"
-color_echo "$yellow" "内核版本: $KERNEL_VERSION"
-color_echo "$yellow" "修复版本: $FIX_VERSION"
+color_echo "$cyan" "=============================================="
+color_echo "$green" "构建配置信息:"
+color_echo "$cyan" "=============================================="
+color_echo "$yellow" "目标设备:    $TARGET_DEVICE"
+color_echo "$yellow" "内核名称:    $KERNEL_NAME"
+color_echo "$yellow" "内核版本:    $KERNEL_VERSION"
+color_echo "$yellow" "修复版本:    $FIX_VERSION"
+color_echo "$yellow" "KernelSU:    $($USE_KSU && echo "启用" || echo "禁用")"
+color_echo "$yellow" "ThinLTO:     $($USE_THINLTO && echo "启用" || echo "禁用")"
+color_echo "$yellow" "ccache:      $($CCACHE_ENABLED && echo "启用" || echo "禁用")"
+color_echo "$yellow" "清理:        $($NO_CLEAN && echo "跳过" || echo "执行")"
+color_echo "$cyan" "=============================================="
 
 color_echo "$green" "[clang 版本信息]:"
 "$CLANG_BIN" --version
@@ -206,9 +224,10 @@ make $MAKE_ARGS olddefconfig
 
 # 记录开始时间
 START_TIME=$(date +%s)
+NUM_JOBS=$(nproc --all)
 
 # 编译内核
-color_echo "$green" "开始编译内核..."
+color_echo "$green" "开始编译内核 (使用 $NUM_JOBS 个线程)..."
 make $MAKE_ARGS -j$(nproc --all) $MAKE_FLAGS
 
 # 检查编译结果
