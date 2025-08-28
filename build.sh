@@ -32,7 +32,7 @@ color_echo "$green" "工作目录: $SCRIPT_DIR"
 TARGET_DEVICE=""
 KERNEL_NAME="GlowX"
 KERNEL_VERSION="v4.0.7"
-FIX_VERSION="X"
+FIX_VERSION="2"
 USE_KSU=true       # 默认启用 KSU
 CCACHE_ENABLED=true
 NO_CLEAN=false
@@ -83,7 +83,7 @@ done
 BUILD_DIR="../Releases_${TARGET_DEVICE}_${KERNEL_NAME}"
 color_echo "$green" "使用独立构建目录: $BUILD_DIR"
 
-CLANG_PATH=${CLANG_PATH:-$HOME/build_toolchain/clang-21/bin}
+CLANG_PATH=${CLANG_PATH:-$HOME/build_toolchain/clang-r563880c/bin}
 
 # 设置完整的工具路径
 export CLANG_BIN="$CLANG_PATH/clang"
@@ -136,7 +136,7 @@ fi
 
 # 添加日期到本地版本
 LOCAL_VERSION_STR="-GlowX"
-LOCAL_VERSION_DATE="-${KERNEL_NAME}-${KERNEL_VERSION}-$(date +%y%m%d)${FIX_VERSION}"
+LOCAL_VERSION_DATE="-${KERNEL_NAME}🌟-${KERNEL_VERSION}-$(date +%y%m%d)${FIX_VERSION}"
 touch .scmversion
 
 # --- 关键改进 5: 配置恢复保障 ---
